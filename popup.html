@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>co2 calculator</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid black;
+      padding: 10px;
+    }
+    th {
+      background-color: lightgray;
+    }
+  </style>
+</head>
+<body>
+  <h1>Internet Usage Calculator</h1>
+  <h2>History</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Website</th>
+        <th>Carbon Footprint (kg of CO2)</th>
+      </tr>
+    </thead>
+    <tbody id="history"></tbody>
+  </table>
+</body>
+<script>
+  console.log("abc");
+  // Get the history of carbon footprint from the local storage
+  let footprintHistory = JSON.parse(sessionStorage.getItem("footprintHistory")) || [];
+  // console.log(footprintHistory)
+  let table = document.getElementById("history");
+  footprintHistory.forEach(function (item) {
+    let row = table.insertRow();
+    let cell1 = row.insertCell();
+    let cell2 = row.insertCell();
+    cell1.innerHTML = item.url;
+    cell2.innerHTML = item.footprint + " kg of CO2";
+  });
+</script>
+</html>

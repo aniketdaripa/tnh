@@ -1,0 +1,22 @@
+
+{
+    "manifest_version": 2,
+    "name": "co2 Usage Calculator",
+    "version": "1.0",
+  
+    "background": {
+      "scripts": [ "background.js" ]
+    },
+  
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "js": [ "content.js" ]
+      }
+    ],
+  
+    "browser_action": {
+      "default_popup": "popup.html"
+    }
+  }
+  
