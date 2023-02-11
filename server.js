@@ -26,43 +26,65 @@ app.get("localhost:3000", (req,res)=>{
 })
 app.post("/submit", (req, res) => {
   const data = req.body;
-  console.log(data);
+  // console.log(data);
   carbonFootprint=data.carbonAmount
   newUrl=data.url
   // Do something with the data, such as save it to a database.
   // res.send({ message: "Data received." });
   
-  var new_profile = new Profile({ webUrl: newUrl, carbonAmount: carbonFootprint })
-  
-    new_profile.save(function(err,result){
-    if (err){
-        console.log(err);
+  Profile.find((err, datas)=>{
+    if(err){
+      console.log(err);
     }
     else{
-      console.log("new data inserted")
+        isPresent=false;
+          for(let i=0;i<datas.length;i++){
+            if(datas[i].webUrl===newUrl){
+              isPresent=true;
+              // console.log("Already present");
+              // break;
+            }
+          }
+          if(isPresent===false){
+            var new_profile = new Profile({ webUrl: newUrl, carbonAmount: carbonFootprint })
+            
+              new_profile.save(function(err,result){
+              if (err){
+                  console.log(err);
+              }
+              else{
+                console.log("new data inserted")
+              }
+            })
+          }
+          if(isPresent===true){
+            console.log("data already present");
+          }
+        }
     }
-  })
+    );   
+
 });
 
+ 
+// mongoose.connection.close();
 
-
-
-
-// app.get("/",(req,res)=>{
-//   res.sendFile(__dirname+"/index.html")
-// })
-// app.post("/", (req, res)=>{
-//   const arr = [{ webUrl: newUrl, carbonAmount: carbonFootprint }];
-//   Profile.insertMany(arr, function(error, docs) {
-//           if(error){
-//               console.log(error);
-//           }
-//           else{
-//               console.log("successfully inserted");
-//           }
-//   })
-//   res.send(`<h1>Data inserted</h1>`)
-// })
+app.get("/", (req,res)=>{
+  
+  Profile.find((err, datas)=>{
+    if(err){
+      console.log(err);
+    }
+    else{
+      res.send(datas);   
+          // for(let i=0;i<datas.length;i++){
+    
+          //   // console.log(datas[i].webUrl,"->",datas[i].carbonAmount);
+          // }
+      }
+    }
+    );   
+})
 
 app.listen(3000, ()=>{
     console.log("port started on 3000");
