@@ -21,29 +21,29 @@ const Profile = mongoose.model('Profile', profileSchema);
 let carbonFootprint=0;
 let newUrl = "";
 
+app.get("localhost:3000", (req,res)=>{
+  console.log(res);
+})
 app.post("/submit", (req, res) => {
   const data = req.body;
-  // console.log(data);
+  console.log(data);
   carbonFootprint=data.carbonAmount
   newUrl=data.url
   // Do something with the data, such as save it to a database.
-  res.send({ message: "Data received." });
+  // res.send({ message: "Data received." });
+  
+  var new_profile = new Profile({ webUrl: newUrl, carbonAmount: carbonFootprint })
+  
+    new_profile.save(function(err,result){
+    if (err){
+        console.log(err);
+    }
+    else{
+      console.log("new data inserted")
+    }
+  })
 });
 
-var new_profile = new Profile({ webUrl: newUrl, carbonAmount: carbonFootprint })
-
-new_profile.save(function(err,result){
-  if (err){
-      console.log(err);
-  }
-  else{
-      console.log("new data inserted")
-  }
-})
-
-// app.get("localhost:3000", (req,res)=>{
-//   console.log(res);
-// })
 
 
 
