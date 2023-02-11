@@ -1,49 +1,70 @@
 const express = require("express");
-const mongoose = require("mongoose");
-
-// Connect to the MongoDB database
-// mongoose.connect("mongodb+srv://aniket1:hianiket123@cluster0.z69mafx.mongodb.net/?retryWrites=true&w=majority", { useNewUrlParser: true });
-async function main() {
-    await mongoose.connect('mongodb+srv://aniket1:hianiket123@cluster0.z69mafx.mongodb.net/?retryWrites=true&w=majority');
-  }
-// Define the schema for the footprint data
-const FootprintSchema = new mongoose.Schema({
-  url: String,
-  footprint: Number
-});
-
-// Compile the schema into a model
-const Footprint = mongoose.model("Footprint", FootprintSchema);
-
-// Create a new express app
+const mongoose = require('mongoose');
 const app = express();
+const bodyParser = require("body-parser");
+app.use(bodyParser.json());
+///database
+mongoose.set('strictQuery', true);
+main().catch(err => console.log(err));
+async function main() {
+  await mongoose.connect('mongodb+srv://aniket1:hianiket123@cluster0.z69mafx.mongodb.net/?retryWrites=true&w=majority');
+  console.log("Database connected")
+}
 
-// Save a new footprint data to the database
-app.post("/", (req, res) => {
-  Footprint.create({
-    url: req.body.url,
-    footprint: req.body.footprint
-  }, (err, footprint) => {
-    if (err) {
-      res.send(err);
-    } else {
-      res.json(footprint);
-    }
+
+const profileSchema = new mongoose.Schema({
+    webUrl: String,
+    carbonAmount: Number
   });
+const Profile = mongoose.model('Profile', profileSchema);
+
+let carbonFootprint=0;
+let newUrl = "";
+
+app.post("/submit", (req, res) => {
+  const data = req.body;
+  // console.log(data);
+  carbonFootprint=data.carbonAmount
+  newUrl=data.url
+  // Do something with the data, such as save it to a database.
+  res.send({ message: "Data received." });
 });
 
-// Get all the footprint data from the database
-app.get("/", (req, res) => {
-  Footprint.find({}, (err, footprints) => {
-    if (err) {
-      res.send(err);
-    } else {
-      res.json(footprints);
-    }
-  });
-});
+var new_profile = new Profile({ webUrl: newUrl, carbonAmount: carbonFootprint })
 
-// Start the server
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
-});
+new_profile.save(function(err,result){
+  if (err){
+      console.log(err);
+  }
+  else{
+      console.log("new data inserted")
+  }
+})
+
+// app.get("localhost:3000", (req,res)=>{
+//   console.log(res);
+// })
+
+
+
+
+// app.get("/",(req,res)=>{
+//   res.sendFile(__dirname+"/index.html")
+// })
+// app.post("/", (req, res)=>{
+//   const arr = [{ webUrl: newUrl, carbonAmount: carbonFootprint }];
+//   Profile.insertMany(arr, function(error, docs) {
+//           if(error){
+//               console.log(error);
+//           }
+//           else{
+//               console.log("successfully inserted");
+//           }
+//   })
+//   res.send(`<h1>Data inserted</h1>`)
+// })
+
+app.listen(3000, ()=>{
+    console.log("port started on 3000");
+})
+
