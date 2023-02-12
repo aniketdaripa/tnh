@@ -87,7 +87,7 @@ app.get("/", (req,res)=>{
       if(cVal>0.5){
         color="notGreen"
       }
-      else if(cVal>0.3 && cVal<=0.5){
+      else if(cVal>=0.1 && cVal<=0.5){
         color="semiGreen"
       }
       ss=element.webUrl
@@ -147,7 +147,7 @@ app.get("/", (req,res)=>{
           <div id="root" class="container">
             <div class="heading">
               <div class="name">Website</div>
-              <div class="amount">CO2 Used</div>
+              <div class="amount">CO2 Used(kg)</div>
               <div class="type">Type</div>
             </div>
           </div>
